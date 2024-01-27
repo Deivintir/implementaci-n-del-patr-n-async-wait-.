@@ -48,3 +48,48 @@ async function messageSet(){
     console.log(message, pilot.name);
 }   
 messageSet();
+
+//Manejo de errores en el patrón "async-await":
+/*Como las promesas en JavaScript permiten la gestión de errores (recordemos, gracias al uso del método "reject*),
+si estas son implementadas en el patrón "async-await" también podemos capturar esos erroress para programar su manejo;
+en este caso, se implementan mediante los bloques "try-catch".
+
+La forma de utilizar el bloque es incluirlo como primer nivel del cuerpo de la función "async" e introducir dentro del
+bloque "try" la ejecución de las funciones asíncronas con "await". En el caso de que se produzcan errorees serán capturados
+por el bloque "catch".*/
+//Ejemplo:
+function getAircraft() {
+    return new Promise((resolve, reject) => {
+        // Lógica para obtener la aeronave
+        let aircraft = { name: 'Harrier', typeofWing: 'fix' };
+
+        if (aircraft === '' || typeof aircraft !== 'object' || typeof aircraft.typeofWing !== 'string' || (aircraft.typeofWing !== 'rot' && aircraft.typeofWing !== 'fix')) {
+            reject({ mensaje: `${aircraft.name}: No es una aeronave.` });
+        }
+
+        setTimeout(() => resolve(aircraft), 2000);
+    });
+}
+
+function getMessage1(typeofWing) {
+    if (typeofWing === 'rot') {
+        return 'Rotary wing';
+    }
+    if (typeofWing === 'fix') {
+        return 'Fix wing';
+    }
+}
+
+async function setWing() {
+    try {
+        let aircraft = await getAircraft(); // Esperar a que la promesa se resuelva
+        let wing = getMessage1(aircraft.typeofWing);
+        console.log(aircraft.name + ' - ' + wing);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+setWing();
+/*El patrón async-await ha tenido un notable éxito en la comunidad de programadores y cada vez es más adoptado por todo tipo de librerías
+y frameworks JavaScript; por ejemplo, la libreria mongoose.js, un ORM oara el cada vez más empleado sistema gestor de bases de datos MongoDB.*/
